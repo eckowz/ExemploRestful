@@ -1,0 +1,69 @@
+Criando o Web Service:
+
+
+1) Crie um novo projeto Java Web chamado "ProdutoRest".
+
+2) Crie uma classe Java chamada "Produto" no pacote "model". 
+2.1- Faça essa classe implementar Serializable
+2.2- Adicione os atributos: nome (String) e preço (Double)
+2.3- Crie os métodos gets e sets e construtores com e sem parâmetros.
+2.4- Adicione acima da classe a anotação @XmlRootElement
+
+3) Crie uma classe repositório para manter os dados na sessão
+3.1- Selecione Novo Arquivo (CTRL+N); Categorias: Enterprise JavaBeans; Tipos de Arquivos: Beans de Sessão; Clique no botão Próximo;
+3.2- Nome EJB: RepositorioProdutos; pacote: repositorio; Clique no botão Finalizar;
+3.3- Na classe "RepositorioProdutos", crie um atributo "listaProdutos" que seja do tipo (List<Produto>).
+3.4- Crie um construtor sem parâmetros que instancie o atributo "listaProdutos" como ArrayList. Adicione dois produtos para testar posteriormente.
+3.5- Crie um método "adicionar" que tenha um parâmetro do tipo "Produto". Adicione esse parâmetro na "listaProdutos".
+3.6- Crie um método "getProdutos" que retorne a "listaProdutos". Salve a classe.
+
+4) Crie um Web Service Restful 
+4.1- Selecione Novo Arquivo (CTRL+N); Categorias: Web Services; Tipos de Arquivos: Web Services Restful a partir de Padrões); Clique no botão Próximo;
+4.2- Mantenha no Recurso Raiz Simples e clique em Próximo;
+4.3- Pacote do recurso: ws; Caminho \: produtos; Nome da Classe: ProdutosResource; Tipo MIME: application/json; e Classe da representação: model.Produto. Clique em 
+Finalizar.
+
+5) Alterando o Web Service
+5.1- Na classe ProdutoResource, crie o atributo "repositorio" sendo do tipo "RepositorioProdutos". Relacione acima desse atributo a anotação "@EJB"
+5.2- Altere o método getJSON para getProdutos e retorne uma lista de produtos (List<Produto>). Dentro do método, adicione o código:
+return repositorio.getProdutos();
+5.3- No método "putJson", altere o nome para addProduto. Altere a anotação @PUT para @POST. Altere o retorno também para String e altere o nome do parâmetro "content' 
+para "produto".
+5.4- Adicione uma nova anotação "@Produces("text/plain")".
+5.5- Na implementação do método, relacione o seguinte código:
+repositorio.adicionar(produto);
+return "OK";
+
+6) Testar o Web Service:
+6.1- Execute o projeto.
+6.2- No projeto (na janela do Netbeans), expanda a pasta "Web Services RESTful" e clique com o botão direito no recurso. Selecione "Testar URI do recurso".
+Obs: Para testar outras funcionalidades (como o POST), você pode baixar o Postman (Chrome) ou Poster (Firefox).
+
+Criando o cliente:
+
+
+1) Crie um projeto Java-Desktop chamado "ClienteProdutoRest" e desmarque a opção de criar a classe principal.
+
+2) Copie a classe (+pacote) Produto para este projeto.
+
+3) Crie o cliente para o Web Service RESTful
+3.1- Selecione Novo Arquivo (CTRL+N); Categorias: Web Services; Tipos de Arquivos: Cliente RESTful Java; Clique no botão Próximo;
+3.2- No nome e localização, marque:
+- Sobre o recurso REST: Selecione Procurar e selecione o recurso do projeto anterior (ProdutoResource).
+- Nome da classe: ClienteProduto
+- Pacote: ws
+- Clique em Finalizar.
+
+4) Altere o código para corrigir de acordo com nossa aplicação:
+- Altere o parâmetro do método adicionarProduto(..) para o tipo Produto e o nome "p";
+- Nesse método, altere o parâmetro do método request para MediaType.TEXT_PLAIN;
+- No método post, altere a variável requestEntity para "p";
+- Altere o parâmetro do método getProdutos para o tipo Generic<T> (ao invés de Class<T>)
+
+5) Crie a classe principal (nome: MainClient) e teste a aplicação:
+- Instancie o objeto ClienteProduto;
+- Chame o método adicionarProduto, relacionando um produto (exemplo: massa, 4.85)
+- Crie uma lista a partir do método getProdutos. Passe como parâmetro: new GenericType<List<Produto>>(){}
+- Faça um foreach e imprima os dados.
+
+6) Teste  o sistema executando a classe principal.
